@@ -8,7 +8,9 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// 🔽 Aqui adicionamos a rota de usuários
+const authRoutes = require('./routes/auth');
+app.use('/', authRoutes);
+
 const userRoutes = require('./routes/user');
 app.use('/users', userRoutes);
 
