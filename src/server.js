@@ -1,26 +1,21 @@
-//importando bibliotecas
-
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 
-//criando aplicação
 const app = express();
+const PORT = process.env.PORT || 3000;
 
-//defiindo porta
-const PORT = process.env.PORT || 3000; 
-
-//middleware
-app.use(express.json());
 app.use(cors());
+app.use(express.json());
 
+// 🔽 Aqui adicionamos a rota de usuários
+const userRoutes = require('./routes/user');
+app.use('/users', userRoutes);
 
-//definindo rota
 app.get('/', (req, res) => {
-    res.send('API rodando!');
+  res.send('API está rodando com Neon + Prisma! 🚀');
 });
 
-//iniciando servidor na porta definida
 app.listen(PORT, () => {
-    console.log(`Servidor rodando na porta ${PORT}`);
+  console.log(`Servidor rodando na porta ${PORT}`);
 });
