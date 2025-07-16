@@ -14,6 +14,17 @@ app.use('/', authRoutes);
 const userRoutes = require('./routes/user');
 app.use('/users', userRoutes);
 
+const uploadRoutes = require('./routes/upload');
+app.use('/upload', uploadRoutes);
+
+
+app.use('/uploads', express.static('uploads'));
+
+const alunoRoutes = require('./routes/aluno');
+app.use('/alunos', alunoRoutes);
+
+
+
 app.get('/', (req, res) => {
   res.send('API está rodando com Neon + Prisma! 🚀');
 });

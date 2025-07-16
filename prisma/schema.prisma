@@ -15,3 +15,98 @@ model User {
   createdAt DateTime @default(now())
 }
 
+model Aluno {
+  id           Int      @id @default(autoincrement())
+  name         String
+  emailMae     String?
+  emailPai     String?
+  telefoneMae  String?
+  telefonePai  String?
+  endereco     String?
+  observacoes  String?
+  docRg        String?   // caminho do arquivo
+  docCertidao  String?   // caminho do arquivo
+  docContrato  String?   // caminho do arquivo
+  createdAt    DateTime @default(now())
+  boletins              Boletim[]
+  relatoriosDescritivos RelatorioDescritivo[]
+  turmas                AlunoNaTurma[]
+}
+
+
+model Disciplina {
+  id           Int      @id @default(autoincrement())
+  nome         String
+  etapa        String
+  cargaHoraria Int?
+  professores  ProfessorNaTurma[]
+  boletins     Boletim[]
+}
+
+model Turma {
+  id            Int                @id @default(autoincrement())
+  nome          String
+  turno         String
+  anoLetivo     Int
+  alunos        AlunoNaTurma[]
+  professores   ProfessorNaTurma[]
+  relatorios    RelatorioDescritivo[]
+  boletins      Boletim[]
+}
+
+model AlunoNaTurma {
+  id        Int   @id @default(autoincrement())
+  aluno     Aluno @relation(fields: [alunoId], references: [id])
+  alunoId   Int
+  turma     Turma @relation(fields: [turmaId], references: [id])
+  turmaId   Int
+  anoLetivo Int
+}
+
+model Professor {
+  id              Int                @id @default(autoincrement())
+  nome            String
+  email           String             @unique
+  senhaHasheada   String
+  cargo           String
+  turmas          ProfessorNaTurma[]
+}
+
+model ProfessorNaTurma {
+  id           Int        @id @default(autoincrement())
+  professor    Professor  @relation(fields: [professorId], references: [id])
+  professorId  Int
+  turma        Turma      @relation(fields: [turmaId], references: [id])
+  turmaId      Int
+  disciplina   Disciplina @relation(fields: [disciplinaId], references: [id])
+  disciplinaId Int
+}
+
+model Boletim {
+  id           Int        @id @default(autoincrement())
+  aluno        Aluno      @relation(fields: [alunoId], references: [id])
+  alunoId      Int
+  disciplina   Disciplina @relation(fields: [disciplinaId], references: [id])
+  disciplinaId Int
+  turma        Turma      @relation(fields: [turmaId], references: [id])
+  turmaId      Int
+  avaliacao1   Float?
+  avaliacao2   Float?
+  avaliacao3   Float?
+  recuperacao  Float?
+  trabalhos    Float?
+  faltas       Int?
+  mediaFinal   Float?
+}
+
+model RelatorioDescritivo {
+  id        Int   @id @default(autoincrement())
+  aluno     Aluno @relation(fields: [alunoId], references: [id])
+  alunoId   Int
+  turma     Turma @relation(fields: [turmaId], references: [id])
+  turmaId   Int
+  anoLetivo Int
+  texto     String
+}
+
+
