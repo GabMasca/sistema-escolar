@@ -150,3 +150,38 @@ model AvaliacaoIndicadorAluno {
   notaId          Int
   observacaoExtra String?
 }
+
+model Cargo {
+  id           Int           @id @default(autoincrement())
+  nome         String
+  funcionarios Funcionario[]
+}
+
+model Funcionario {
+  id                 Int               @id @default(autoincrement())
+  nome               String
+  dataContratacao    DateTime
+  cargoId            Int
+  cargo              Cargo             @relation(fields: [cargoId], references: [id])
+  
+  experienciaPontos  Int               // inserido pelo RH manualmente
+  formacaoPontos     Int               // inserido pelo RH manualmente
+  inglesPontos       Int               // inserido pelo RH manualmente
+
+  classificacao       String           // preenchido automaticamente (junior, pleno, sênior)
+  pontosTotais        Int              // calculado automaticamente
+
+  folhasPagamento     FolhaPagamento[]
+}
+
+model FolhaPagamento {
+  id             Int          @id @default(autoincrement())
+  funcionarioId  Int
+  funcionario    Funcionario  @relation(fields: [funcionarioId], references: [id])
+
+  mesReferencia  String       // exemplo: "2025-07"
+  salarioBruto   Float
+  descontos      Float
+  salarioLiquido Float
+  dataPagamento  DateTime
+}

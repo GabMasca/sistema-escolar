@@ -40,6 +40,12 @@ app.use('/notas', notaRoutes);
 const avaliacaoIndicadorRoutes = require('./routes/avaliacaoIndicador');
 app.use('/avaliacoes-indicadores', avaliacaoIndicadorRoutes);
 
+const funcionarioRoutes = require('./routes/funcionario');
+app.use('/funcionarios', funcionarioRoutes);
+
+const cargoRoutes = require('./routes/cargo');
+app.use('/cargos', cargoRoutes);
+
 
 app.get('/', (req, res) => {
   res.send('API está rodando com Neon + Prisma! 🚀');
