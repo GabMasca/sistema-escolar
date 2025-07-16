@@ -30,9 +30,9 @@ model Aluno {
   createdAt    DateTime @default(now())
   boletins              Boletim[]
   relatoriosDescritivos RelatorioDescritivo[]
-  turmas                AlunoNaTurma[]
+  turmas       AlunoNaTurma[] @relation("AlunoNasTurmas")
+  avaliacoesIndicadores AvaliacaoIndicadorAluno[]  // <== ADICIONADO
 }
-
 
 model Disciplina {
   id           Int      @id @default(autoincrement())
@@ -41,6 +41,8 @@ model Disciplina {
   cargaHoraria Int?
   professores  ProfessorNaTurma[]
   boletins     Boletim[]
+  indicadoresAvaliativos IndicadorAvaliativo[]  // <== ADICIONADO
+  notasAvaliativas       NotaAvaliativa[]       // <== ADICIONADO
 }
 
 model Turma {
@@ -52,11 +54,12 @@ model Turma {
   professores   ProfessorNaTurma[]
   relatorios    RelatorioDescritivo[]
   boletins      Boletim[]
+  indicadoresAvaliativos IndicadorAvaliativo[]  // <== ADICIONADO
 }
 
 model AlunoNaTurma {
   id        Int   @id @default(autoincrement())
-  aluno     Aluno @relation(fields: [alunoId], references: [id])
+  aluno     Aluno @relation("AlunoNasTurmas", fields: [alunoId], references: [id])
   alunoId   Int
   turma     Turma @relation(fields: [turmaId], references: [id])
   turmaId   Int
@@ -83,20 +86,22 @@ model ProfessorNaTurma {
 }
 
 model Boletim {
-  id           Int        @id @default(autoincrement())
-  aluno        Aluno      @relation(fields: [alunoId], references: [id])
-  alunoId      Int
-  disciplina   Disciplina @relation(fields: [disciplinaId], references: [id])
-  disciplinaId Int
-  turma        Turma      @relation(fields: [turmaId], references: [id])
-  turmaId      Int
-  avaliacao1   Float?
-  avaliacao2   Float?
-  avaliacao3   Float?
-  recuperacao  Float?
-  trabalhos    Float?
-  faltas       Int?
-  mediaFinal   Float?
+  id              Int        @id @default(autoincrement())
+  aluno           Aluno      @relation(fields: [alunoId], references: [id])
+  alunoId         Int
+  disciplina      Disciplina @relation(fields: [disciplinaId], references: [id])
+  disciplinaId    Int
+  turma           Turma      @relation(fields: [turmaId], references: [id])
+  turmaId         Int
+  notaAvaliacao1  Float?
+  notaAvaliacao2  Float?
+  notaAvaliacao3  Float?
+  notaRecuperacao Float?
+  notaTrabalho    Float?
+  faltas          Int?
+  mediaFinal      Float?
+  observacoes     String?
+  createdAt       DateTime   @default(now())
 }
 
 model RelatorioDescritivo {
@@ -109,4 +114,39 @@ model RelatorioDescritivo {
   texto     String
 }
 
+model IndicadorAvaliativo {
+  id          Int     @id @default(autoincrement())
+  descricao   String
+  tipo        String  // 'habilidade', 'postura', 'bncc', etc.
+  anoLetivo   Int
+  periodo     Int
+  disciplina  Disciplina @relation(fields: [disciplinaId], references: [id])
+  disciplinaId Int
+  turma       Turma     @relation(fields: [turmaId], references: [id])
+  turmaId     Int
+  ativo       Boolean   @default(true)
+  avaliacoes  AvaliacaoIndicadorAluno[]  // <== ADICIONADO
+}
 
+model NotaAvaliativa {
+  id            Int     @id @default(autoincrement())
+  letra         String  // A, B, C, D...
+  valor         Float
+  tipo          String  // 'habilidade', 'postura', etc.
+  anoLetivo     Int
+  disciplina    Disciplina @relation(fields: [disciplinaId], references: [id])
+  disciplinaId  Int
+  ativo         Boolean @default(true)
+  avaliacoes    AvaliacaoIndicadorAluno[]  // <== ADICIONADO
+}
+
+model AvaliacaoIndicadorAluno {
+  id              Int     @id @default(autoincrement())
+  aluno           Aluno   @relation(fields: [alunoId], references: [id])
+  alunoId         Int
+  indicador       IndicadorAvaliativo @relation(fields: [indicadorId], references: [id])
+  indicadorId     Int
+  nota            NotaAvaliativa @relation(fields: [notaId], references: [id])
+  notaId          Int
+  observacaoExtra String?
+}
