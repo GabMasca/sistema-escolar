@@ -164,12 +164,11 @@ model Funcionario {
   cargoId            Int
   cargo              Cargo             @relation(fields: [cargoId], references: [id])
   
-  experienciaPontos  Int               // inserido pelo RH manualmente
-  formacaoPontos     Int               // inserido pelo RH manualmente
-  inglesPontos       Int               // inserido pelo RH manualmente
-
-  classificacao       String           // preenchido automaticamente (junior, pleno, sênior)
-  pontosTotais        Int              // calculado automaticamente
+pontosExperiencia  Int
+  pontosFormacao     Int
+  pontosIngles       Int
+  totalPontos        Int
+  classificacao       String
 
   folhasPagamento     FolhaPagamento[]
 }
@@ -185,6 +184,8 @@ model FolhaPagamento {
   descontos      Float
   salarioLiquido Float
   criadoEm       DateTime   @default(now())
+
+
 }
 
 
