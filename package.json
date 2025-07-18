@@ -20,6 +20,7 @@
     "multer": "^2.0.1"
   },
   "devDependencies": {
+    "@types/express": "^5.0.3",
     "prisma": "^6.12.0"
   }
 }

@@ -179,9 +179,12 @@ model FolhaPagamento {
   funcionarioId  Int
   funcionario    Funcionario  @relation(fields: [funcionarioId], references: [id])
 
-  mesReferencia  String       // exemplo: "2025-07"
+  mesReferencia  Int  // exemplo: 07
+  anoReferencia  Int
   salarioBruto   Float
   descontos      Float
   salarioLiquido Float
-  dataPagamento  DateTime
+  criadoEm       DateTime   @default(now())
 }
+
+
